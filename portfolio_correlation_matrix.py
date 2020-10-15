@@ -23,15 +23,39 @@ MY_STOCKS = ['AAPL', 'CHKP', 'CLOU',
 def getYahooData():
 
     if not os.path.exists('stocksData'):
+
         os.makedirs('stocksData')
 
     for ticker in MY_STOCKS:
 
         if not os.path.exists('stocksData/{}.csv'.format(ticker)):
+
             df = web.DataReader(ticker, 'yahoo', startDate, endDate)
-            print(df.head())
             df.reset_index(inplace=True)
             df.set_index("Date", inplace=True)
             df.to_csv('stocksData/{}.csv'.format(ticker))
 
 getYahooData()
+
+def buildDataFrame():
+
+    mainDF = pd.DataFrame()
+
+    for numberOfStocks, ticker in enumerate(MY_STOCKS):
+
+        df = pd.read_csv('stocksData/{}.csv'.format(ticker))
+        df.set_index('Date', inplace = True)
+        df.drop(['Open', 'High', 'Low', 'Close', 'Volume'], 1, inplace = True)
+        df.rename(columns = {'Adj Close' : ticker}, inplace = True)
+
+        if mainDF.empty:
+
+            mainDF = df
+
+        else:
+
+            mainDF = mainDF.join(df, how = 'outer')
+
+    mainDF.to_csv('MY_STOCKS_joined_closes.csv')
+
+buildDataFrame()
