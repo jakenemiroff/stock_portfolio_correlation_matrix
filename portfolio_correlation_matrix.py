@@ -13,4 +13,8 @@ endDate = dt.datetime(2020, 10, 15)
 
 df = web.DataReader('AAPL', 'yahoo', startDate, endDate)
 
-print(df.head())
+# df.to_csv('AAPL.csv')
+
+# df = pd.read_csv('AAPL.csv', parse_dates = True, index_col = 0)
+
+# print(df.head())
