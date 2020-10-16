@@ -1,24 +1,18 @@
 import numpy as np
-import requests
 import pandas as pd
 import pandas_datareader.data as web
 import datetime as dt
+import seaborn as sns
 import matplotlib.pyplot as plt
-from matplotlib import style
-import mplfinance as mpf
-import matplotlib.dates as mdates
 import os
-
-style.use('ggplot')
 
 startDate = dt.datetime(2020, 1, 1)
 endDate = dt.datetime(2020, 10, 15)
 
-MY_STOCKS = ['AAPL', 'CHKP', 'CLOU',
+MY_STOCKS = ['AAPL', 'CHKP',
             'ILMN', 'JNJ', 'KXS.TO', 'MSFT', 'PG',
-            'SNPS', 'SPLK', 'SQ', 'TSM', 'VGK', 'VGT',
-            'VTV', 'WIX', 'AMZN', 'COST', 'HD', 'IEMG',
-            'RY', 'TCEHY', 'TOU.TO', 'WM', 'XBI']
+            'SNPS', 'SPLK', 'SQ', 'TSM', 'WIX', 'AMZN', 'COST', 'HD',
+            'RY', 'TCEHY', 'TOU.TO', 'WM']
 
 def getYahooData():
 
@@ -59,3 +53,17 @@ def buildDataFrame():
     mainDF.to_csv('MY_STOCKS_joined_closes.csv')
 
 buildDataFrame()
+
+def visualizeData():
+
+    df = pd.read_csv('MY_STOCKS_joined_closes.csv')
+
+    correlation = df.corr()
+
+    plt.figure(figsize=(10, 5))
+
+    sns.heatmap(correlation, annot = True, vmin=-1, vmax=1, center= 0, cmap= 'coolwarm', linewidths=3, linecolor='black')
+
+    plt.show()
+
+visualizeData()
